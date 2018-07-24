@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="deliveryboss.com.reparto.ui.EnviarMensajeFragment">
+
+
+    <EditText
+        android:id="@+id/txtMensajeCuerpo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/FondoCamposColor"
+        android:elevation="0dp"
+        android:ems="10"
+        android:inputType="textMultiLine|textShortMessage"
+        android:padding="10dp"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"></EditText>
+
+    <Button
+        android:id="@+id/btnMensajeEnviar"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_below="@+id/txtMensajeCuerpo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        android:backgroundTint="@color/colorComida"
+        android:elevation="10dp"
+        android:text="Enviar Mensaje"
+        android:textColor="@color/cardview_light_background"></Button>
+
+</RelativeLayout>

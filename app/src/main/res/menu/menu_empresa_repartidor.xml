@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_search"
+        android:title="Buscar"
+        android:icon="@drawable/ic_action_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <group>
+        <item
+            android:id="@+id/action_mostrar_pendientes"
+            android:checkable="true"
+            android:title="Mostrar solo En Tránsito"
+            app:showAsAction="never" />
+    </group>
+</menu>

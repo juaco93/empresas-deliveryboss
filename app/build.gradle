@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "deliveryboss.com.reparto"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.1.2'
+    compile 'com.facebook.android:facebook-android-sdk:4.34.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:support-v4:26.1.0'
+    compile 'com.iarcuschin:simpleratingbar:0.1.5'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
+    compile 'com.google.android.gms:play-services-maps:10.2.4'
+    compile 'de.hdodenhof:circleimageview:1.3.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.github.aakira:expandable-layout:1.6.0@aar'
+    compile 'com.google.firebase:firebase-messaging:10.2.4'
+    // Distancia delivery
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
+    // FAB con "Speed Dial"
+    //compile 'com.getbase:floatingactionbutton:1.10.1'
+    compile 'com.github.toanvc:floatingactionmenu:0.8.9'
+}
+apply plugin: 'com.google.gms.google-services'
+
+
+
