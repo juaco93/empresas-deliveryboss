@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
-
     }
 
 
@@ -254,113 +253,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void obtenerOrdenes(){
-        authorization = SessionPrefs.get(getApplicationContext()).getPrefUsuarioToken();
-        String idusuario = SessionPrefs.get(getApplicationContext()).getPrefUsuarioIdUsuario();
-        String idempresa = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRepartoEmpresaIdempresa();
-        //String idusuario = "1";
-        //authorization = "7777";
-        //String idempresa = "1";
 
-        Log.d("reparto", "Recuperando Ordenes desde el Server");
-
-        // Realizar petición HTTP
-        Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesUsuario(authorization,idempresa,idusuario);
-        call.enqueue(new Callback<ApiResponseOrdenes>() {
-            @Override
-            public void onResponse(Call<ApiResponseOrdenes> call,
-                                   Response<ApiResponseOrdenes> response) {
-                if (!response.isSuccessful()) {
-                    // Procesar error de API
-                    String error = "Ha ocurrido un error. Contacte al administrador";
-                    if (response.errorBody()
-                            .contentType()
-                            .subtype()
-                            .equals("json")) {
-
-                        //Log.d("gson", response.errorBody().toString());
-                        //ApiError apiError = ApiError.fromResponseBody(response.errorBody());
-
-                        //error = apiError.getMessage();
-                        //Log.d(TAG, apiError.getDeveloperMessage());
-                    } else {
-                        //Log.d("gson", response.errorBody().toString());
-                        /*try {
-                            // Reportar causas de error no relacionado con la API
-                            Log.d(TAG, response.errorBody().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }*/
-                    }
-                    //showLoadingIndicator(false);
-                    //showErrorMessage(error);
-                    //Log.d("gson", response.message());
-                    //Log.d("gson", response.raw().toString());
-                    // Mostrar empty state
-                    mostrarOrdenesEmpty();
-                    return;
-                }
-
-                serverOrdenes = response.body().getDatos();
-                //Log.d("gson", "toido bien, recibido: " + response.body().getDatos().toString());
-                if (serverOrdenes.size() > 0) {
-                    // Mostrar lista de ordenes
-                    mostrarOrdenes(serverOrdenes);
-                    showLoadingIndicator(false);
-                } else {
-                    // Mostrar empty state
-                    mostrarOrdenesEmpty();
-                    showLoadingIndicator(false);
-                }
-                if(getIntent()!=null){
-                    //Log.d("notinoti","Recibimos notificacion, ingresando a orden");
-                    if(getIntent().getStringExtra("idorden")!=null){
-                        int cant = serverOrdenes.size();
-                        for(int i=0;i<cant;i++){
-                            // Chequeamos el idorden para ver si esta en las listadas, y si está actuamos según el estado de la orden
-                            // Si estado='confirmada' o estado='cancelada' mostramos el estado de la orden
-                            // Si estado='entregada' entonces mostramos el dialogo para calificar la orden
-                            if(serverOrdenes.get(i).getIdorden().equals(getIntent().getStringExtra("idorden"))){
-                                if(getIntent().getStringExtra("estado").equals("entregada")){
-                                    //if(serverOrdenes.get(i).getCalificado()==null)showDialogCalificar((new Gson()).toJson(serverOrdenes.get(i)));
-                                }
-                                if(getIntent().getStringExtra("estado").equals("confirmada")||getIntent().getStringExtra("estado").equals("cancelada")||getIntent().getStringExtra("estado").equals("anulada")||getIntent().getStringExtra("estado").equals("enviada")){
-                                    //showInfoEstadoOrden((new Gson()).toJson(serverOrdenes.get(i)));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseOrdenes> call, Throwable t) {
-                //showLoadingIndicator(false);
-                //Log.d("gson", "Petición rechazada:" + t.getMessage());
-                showLoadingIndicator(false);
-                //showErrorMessage("Error de comunicación");
-            }
-        });
-    }
-
-    private void mostrarOrdenes(List<Orden> ordenesServer) {
-        //Log.d("gson", "Entramos a mostrar ordenes ");
-        mOrdenesAdapter.swapItems(ordenesServer);
-        mListaOrdenes.setVisibility(View.VISIBLE);
-        mEmptyStateContainer.setVisibility(View.GONE);
-
-        // Por defecto, la primera vez mostramos la lista filtrada
-        if(isFirstOpening) {
-            filtrarListaPorParametro("en transito");
-            isFirstOpening = false;
-        }
-    }
-
-    private void mostrarOrdenesEmpty() {
-        mListaOrdenes.setVisibility(View.GONE);
-        mEmptyStateContainer.setVisibility(View.VISIBLE);
-        txtEmptyContainer.setText(getResources().getString(R.string.mensajeSinOrdenes));
-    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -394,9 +287,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showLoadingIndicator(final boolean show) {
-        swipeRefreshLayout.setRefreshing(show);
-    }
+
 
     @Override
     public void onBackPressed() {
@@ -470,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
 
                 if (TextUtils.isEmpty(newText)) {
-                    obtenerOrdenes();
+                    //obtenerOrdenes();
                 } else {
                     buscar(newText);
                 }
@@ -531,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         mOrdenesAdapter.swapItems(filteredList);
-        if(cant<=0)mostrarOrdenesEmpty();
+        //if(cant<=0)mostrarOrdenesEmpty();
 
     }
 

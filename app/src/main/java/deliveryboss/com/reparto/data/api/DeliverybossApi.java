@@ -49,10 +49,9 @@ public interface  DeliverybossApi {
     Call<Empresa_repartidor> registroFb(@Body FbRegisterBody fbRegisterBody);
 
 
-    @GET("ordenes_reparto/{idempresa}/{idusuario_reparto}")
-    Call<ApiResponseOrdenes> obtenerOrdenesUsuario(@Header("Authorization") String authorization,
-                                                   @Path(value = "idempresa", encoded = true) String idempresa,
-                                                   @Path(value = "idusuario_reparto", encoded = true) String idusuario_reparto
+    @GET("ordenes_reparto/{idempresa}")
+    Call<ApiResponseOrdenes> obtenerOrdenesEmpresa(@Header("Authorization") String authorization,
+                                                   @Path(value = "idempresa", encoded = true) String idempresa
     );
 
 
@@ -70,5 +69,7 @@ public interface  DeliverybossApi {
                                      @Path(value = "idorden", encoded = true) String idorden,
                                      @Body Orden orden
     );
+
+
 
 }
