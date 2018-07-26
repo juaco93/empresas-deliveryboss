@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         // Remover título de la action bar
         //getSupportActionBar().setDisplayShowTitleEnabled(true);

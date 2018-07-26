@@ -86,14 +86,30 @@
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="7dp"
-            tools:text="Jorge Luis Perales" />
+            android:background="@color/colorOrdenConfirmada"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/cardview_light_background"
+            tools:text="Komi Sushi" />
 
+
+        <TextView
+            android:id="@+id/txtOrdenNombreCliente"
+            style="@style/Base.TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtOrdenNombreEmpresa"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="7dp"
+            tools:text="Jorge Luis Perales" />
 
         <TextView
             android:id="@+id/txtOrdenDireccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtOrdenNombreEmpresa"
+            android:layout_below="@+id/txtOrdenNombreCliente"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"

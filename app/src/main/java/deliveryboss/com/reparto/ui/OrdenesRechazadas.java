@@ -1,22 +1,12 @@
 package deliveryboss.com.reparto.ui;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -27,38 +17,27 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-
-import deliveryboss.com.reparto.R;
-import deliveryboss.com.reparto.data.adapter.OrdenesAdapter;
-import deliveryboss.com.reparto.data.api.DeliverybossApi;
-
-import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+import deliveryboss.com.reparto.R;
+import deliveryboss.com.reparto.data.adapter.OrdenesAdapter;
+import deliveryboss.com.reparto.data.api.DeliverybossApi;
 import deliveryboss.com.reparto.data.model.ApiResponseOrdenes;
 import deliveryboss.com.reparto.data.model.Orden;
-import deliveryboss.com.reparto.data.prefs.SessionPrefs;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 import static android.content.Context.SEARCH_SERVICE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
-
-public class InfoMenuFragment extends Fragment {
+public class OrdenesRechazadas extends Fragment {
 
     Context context;
     private RecyclerView mListaOrdenes;
@@ -75,7 +54,7 @@ public class InfoMenuFragment extends Fragment {
     private boolean isFirstOpening = true;
 
 
-    public InfoMenuFragment() {
+    public OrdenesRechazadas() {
         // Required empty public constructor
     }
 
@@ -91,10 +70,10 @@ public class InfoMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_info_menu, container, false);
+        View v = inflater.inflate(R.layout.fragment_ordenes_rechazadas, container, false);
 
 
-        mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes);
+        mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes_rechazadas);
         mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
         mListaOrdenes.setAdapter(mOrdenesAdapter);
         mOrdenesAdapter.setOnItemClickListener(new OrdenesAdapter.OnItemClickListener() {
@@ -106,7 +85,7 @@ public class InfoMenuFragment extends Fragment {
         mEmptyStateContainer = v.findViewById(R.id.empty_state_containerOrdenes);
         txtEmptyContainer = (TextView) v.findViewById(R.id.txtOrdenesEmptyContainer);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_content_ordenes);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_content_ordenes_rechazadas);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -166,6 +145,7 @@ public class InfoMenuFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 if (TextUtils.isEmpty(newText)) {
                     //obtenerProductos("");
 
@@ -176,7 +156,7 @@ public class InfoMenuFragment extends Fragment {
                 return false;
             }
         });
-        }
+    }
 
     public void buscar(String query){
         query = query.toString().toLowerCase();
@@ -341,7 +321,6 @@ public class InfoMenuFragment extends Fragment {
     }
 
 
-
     public void filtrarListaPorParametro(){
         //Log.d("juaco1993","Filtrando por: "+filtro);
         int cant=0;
@@ -349,7 +328,7 @@ public class InfoMenuFragment extends Fragment {
 
         for (int i = 0; i < serverOrdenes.size(); i++) {
             // Si la orden esta en estado "Enviada" o sea, en camino
-            if (serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("1") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("5") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("6")) {
+            if (serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("2") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("4")) {
                 filteredList.add(serverOrdenes.get(i));
                 cant++;
             }
@@ -357,9 +336,6 @@ public class InfoMenuFragment extends Fragment {
         mOrdenesAdapter.swapItems(filteredList);
         //if(cant<=0)mostrarOrdenesEmpty();
     }
-
-
-
 
 
 }

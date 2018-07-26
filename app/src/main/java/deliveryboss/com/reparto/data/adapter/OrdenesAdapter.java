@@ -65,7 +65,8 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Orden orden = mItems.get(position);
         holder.idorden.setText("Orden #" + orden.getIdorden());
-        holder.nombreEmpresa.setText(orden.getNombre() + " " + orden.getApellido());
+        holder.nombreEmpresa.setText(orden.getNombre_empresa());
+        holder.nombreCliente.setText(orden.getNombre() + " " + orden.getApellido());
         holder.fecha.setText(orden.getFecha_hora());
         holder.estado.setText(orden.getEstado());
         holder.direccion.setText(orden.getCalle() + " " +orden.getNumero() + " " + orden.getHabitacion() + " - Bº" + orden.getBarrio());
@@ -215,6 +216,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView idorden;
         public TextView nombreEmpresa;
+        public TextView nombreCliente;
         public TextView fecha;
         public TextView orden_detalle;
         public TextView estado;
@@ -232,6 +234,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             super(itemView);
             idorden = (TextView) itemView.findViewById(R.id.txtOrdenIdOrden);
             nombreEmpresa = (TextView) itemView.findViewById(R.id.txtOrdenNombreEmpresa);
+            nombreCliente = (TextView) itemView.findViewById(R.id.txtOrdenNombreCliente);
             fecha = (TextView) itemView.findViewById(R.id.txtOrdenFechaHora) ;
             orden_detalle = (TextView) itemView.findViewById(R.id.txtOrdenDetalle);
             estado = (TextView) itemView.findViewById(R.id.txtOrdenEstado);

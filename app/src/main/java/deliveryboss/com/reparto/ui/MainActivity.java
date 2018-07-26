@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
     InfoMenuFragment fragmentMenu = new InfoMenuFragment();
+    OrdenesRechazadas fragmentRechazadas = new OrdenesRechazadas();
+    OrdenesEntregadas fragmentEntregadas = new OrdenesEntregadas();
 
 
     List<Orden> serverOrdenes;
@@ -114,16 +116,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Inicio Toolbar
+        //toolbar = findViewById(R.id.toolbarMenu);
+        //setSupportActionBar(toolbar);
+        setToolbar();
 
-
-
-        //collapsing_container = (CollapsingToolbarLayout) findViewById(R.id.collapsing_container);
-        //collapsing_container.setTitle(getResources().getString(R.string.title_activity_detalle_empresa));
-        //collapsing_container.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -193,18 +191,13 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(fragmentMenu, "A Resolver");
-/*        adapter.addFragment(fragmentInfoEmpresa, "Informacion");
-        adapter.addFragment(fragmentCalificaciones, "Calificacion");
-  */      viewPager.setAdapter(adapter);
+        adapter.addFragment(fragmentRechazadas, "Rechazadas");
+        adapter.addFragment(fragmentEntregadas, "Entregadas");
+        viewPager.setAdapter(adapter);
 
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-
-
-
-
-
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
@@ -231,8 +224,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTabIcons() {
+        /*
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-       /* tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);*/
     }
 
@@ -326,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
 
     // A PARTIR DE ACA EMPIEZA CODIGO RELATIVO AL NAV DRAWER
     private void setToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMenu);
         setSupportActionBar(toolbar);
 
         final android.support.v7.app.ActionBar ab = getSupportActionBar();
@@ -337,12 +331,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        /*if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
             getMenuInflater().inflate(R.menu.menu_empresa_repartidor, menu);
             //return true;
-        }
+        }*/
+        getMenuInflater().inflate(R.menu.menu_empresa_repartidor, menu);
         if(MenuItemCompat.getActionView(menu.findItem(R.id.action_search))!=null)searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -434,7 +430,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         if(!orden.isEmpty() && !orden.equals(""))args.putString("orden", orden);
         newFragment.setArguments(args);
-
         newFragment.show(fragmentManager.beginTransaction(), "Enviar mensaje al cliente");
 
     }

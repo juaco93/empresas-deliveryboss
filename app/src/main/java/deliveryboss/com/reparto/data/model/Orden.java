@@ -5,6 +5,7 @@ import java.util.List;
 public class Orden {
     String idorden;
     String empresa_idempresa;
+    String nombre_empresa;
     String usuario_idusuario;
     String usuario_direccion_idusuario_direccion;
     String orden_estado_idorden_estado;
@@ -31,9 +32,10 @@ public class Orden {
     String indicaciones;
     List<Orden_detalle> orden_detalle;
 
-    public Orden(String idorden, String empresa_idempresa, String usuario_idusuario, String usuario_direccion_idusuario_direccion, String orden_estado_idorden_estado, String nombre, String apellido, String telefono, String estado, String info_estado, String fecha_hora, String fecha_hora_estado, String precio_delivery, String importe_total, String nota, String tipo_entrega_idtipo_entrega, String paga_con, String recibida, String recibida_fecha_hora, String latitud, String longitud, String calle, String numero, String habitacion, String barrio, String indicaciones, List<Orden_detalle> orden_detalle) {
+    public Orden(String idorden, String empresa_idempresa, String nombre_empresa, String usuario_idusuario, String usuario_direccion_idusuario_direccion, String orden_estado_idorden_estado, String nombre, String apellido, String telefono, String estado, String info_estado, String fecha_hora, String fecha_hora_estado, String precio_delivery, String importe_total, String nota, String tipo_entrega_idtipo_entrega, String paga_con, String recibida, String recibida_fecha_hora, String latitud, String longitud, String calle, String numero, String habitacion, String barrio, String indicaciones, List<Orden_detalle> orden_detalle) {
         this.idorden = idorden;
         this.empresa_idempresa = empresa_idempresa;
+        this.nombre_empresa = nombre_empresa;
         this.usuario_idusuario = usuario_idusuario;
         this.usuario_direccion_idusuario_direccion = usuario_direccion_idusuario_direccion;
         this.orden_estado_idorden_estado = orden_estado_idorden_estado;
@@ -75,6 +77,14 @@ public class Orden {
 
     public void setEmpresa_idempresa(String empresa_idempresa) {
         this.empresa_idempresa = empresa_idempresa;
+    }
+
+    public String getNombre_empresa() {
+        return nombre_empresa;
+    }
+
+    public void setNombre_empresa(String nombre_empresa) {
+        this.nombre_empresa = nombre_empresa;
     }
 
     public String getUsuario_idusuario() {

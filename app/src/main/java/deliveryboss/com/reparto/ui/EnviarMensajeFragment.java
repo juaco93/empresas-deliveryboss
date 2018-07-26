@@ -186,7 +186,7 @@ public class EnviarMensajeFragment extends DialogFragment {
             recibida="0";
         }
 
-        Orden ordenMod = new Orden(idorden,"","","","","","","","","","","","","1","","","","",recibida,fechaHora,"","","","","","",vacia);
+        Orden ordenMod = new Orden(idorden,"","","","","","","","","","","","","","1","","","","",recibida,fechaHora,"","","","","","",vacia);
 
         Log.d("calificacion",(new Gson()).toJson(ordenMod));
 
