@@ -9,9 +9,8 @@
 
     <group>
         <item
-            android:id="@+id/action_mostrar_pendientes"
-            android:checkable="true"
-            android:title="Mostrar solo En Tránsito"
+            android:id="@+id/action_logout"
+            android:title="Cerrar sesión"
             app:showAsAction="never" />
     </group>
 </menu>
