@@ -114,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
 
@@ -126,62 +128,42 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setOffscreenPageLimit(3-1);
-        /*
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                switch (state) {
-                    case ViewPager.SCROLL_STATE_DRAGGING:
-                        //mSharedFab.hide(); // Hide animation
-                        break;
-                    case ViewPager.SCROLL_STATE_IDLE:
-                        switch (viewPager.getCurrentItem()) {
-                            case 0:
-                                //fragmentCalificaciones.shareFab(null); // Remove FAB from fragment
-                                fragmentInfoEmpresa.shareFab(null);
-                                //fragmentMenu.shareFab(mSharedFab); // Share FAB to new displayed fragment
-                                //mSharedFab.show();
-                                EventBus.getDefault().post(new MessageEvent("11", "Tab en menu"));
-                                break;
-                            case 1:
-                                fragmentMenu.shareFab(null); // Remove FAB from fragment
-                                //fragmentCalificaciones.shareFab(null); // Share FAB to new displayed fragment
-                                fragmentInfoEmpresa.shareFab(null);
-                                EventBus.getDefault().post(new MessageEvent("12", "Tab NO en menu"));
-                                break;
-                            case 2:
-                                fragmentMenu.shareFab(null); // Remove FAB from fragment
-                                //fragmentCalificaciones.shareFab(null); // Share FAB to new displayed fragment
-                                fragmentInfoEmpresa.shareFab(null);
-                                EventBus.getDefault().post(new MessageEvent("12", "Tab NO en menu"));
-                                break;
-                            default:
-                                fragmentMenu.shareFab(null); // Remove FAB from fragment
-                                //fragmentCalificaciones.shareFab(null); // Share FAB to new displayed fragment
-                                fragmentInfoEmpresa.shareFab(null);
-                                EventBus.getDefault().post(new MessageEvent("12", "Tab NO en menu"));
-                                break;
-                        }
-                        //mSharedFab.show(); // Show animation
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-        });*/
 
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        fotoPerfil = (ImageView) headerView.findViewById(R.id.circle_image);
+        userName = (TextView) headerView.findViewById(R.id.userName);
+        userEmail = (TextView) headerView.findViewById(R.id.userEmail);
+
+        if (navigationView != null) {
+            setupDrawerContent(navigationView);
+            // Añadir carácteristicas
+
+            String nombre = SessionPrefs.get(this).getPrefUsuarioNombreyApellido();
+            String email = SessionPrefs.get(this).getPrefUsuarioEmail();
+            String imagen = SessionPrefs.get(this).getPrefUsuarioImagen();
+
+            if(imagen!=null){
+                if(!imagen.isEmpty()) {
+                    Picasso.with(this).setLoggingEnabled(true);
+                    Picasso
+                            .with(this)
+                            .load(imagen)
+                            .fit()
+                            .transform(new CircleTransform())
+                            .into(fotoPerfil);
+                }}
+            userName.setText(nombre);
+            userEmail.setText(email);
+
+        }
 
     }
 
@@ -234,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
                 // app icon in action bar clicked; go home
                 //Intent intent = new Intent(this, PrincipalActivity.class);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -242,8 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 //startActivity(intent);
                 //   EventBus.getDefault().post(new MessageEvent("13", "Presionado Back"));
                 return true;
-            case R.id.action_logout:
-                SessionPrefs.get(this).logOut();
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -337,37 +319,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Log.d("pruebas","Ingreso a onCreateOptionsMenu");
-        /*if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        /*
+        if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
             getMenuInflater().inflate(R.menu.menu_empresa_repartidor, menu);
             //return true;
-        }
-        getMenuInflater().inflate(R.menu.menu_empresa_repartidor, menu);
-        if(MenuItemCompat.getActionView(menu.findItem(R.id.action_search))!=null)searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        MenuItem checkboxEnTransito = menu.getItem(1);
-        checkboxEnTransito.setChecked(true);
+        }*/
 
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (TextUtils.isEmpty(newText)) {
-                    //obtenerOrdenes();
-                } else {
-                    buscar(newText);
-                }
-                return false;
-            }
-        });
-        */
         return true;
     }
 
@@ -436,6 +394,45 @@ public class MainActivity extends AppCompatActivity {
         newFragment.setArguments(args);
         newFragment.show(fragmentManager.beginTransaction(), "Enviar mensaje al cliente");
 
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // Marcar item presionado
+                        menuItem.setChecked(true);
+
+                        //Hacer lo que tenga que hacer
+                        int id = menuItem.getItemId();
+                        switch (id) {
+                            case R.id.nav_empresas:
+                                // launch new intent instead of loading fragment
+                                //startActivity(new Intent(MainActivity.this, MisOrdenesActivity.class));
+                                break;
+                            case R.id.nav_ayuda:
+                                //startActivity(new Intent(PrincipalActivity.this, MisDireccionesActivity.class));
+                                break;
+                            case R.id.nav_sugerirempresa:
+                                //startActivity(new Intent(PrincipalActivity.this, SugerirEmpresa.class));
+                                break;
+                            case R.id.nav_logout:
+                                SessionPrefs.get(getApplicationContext()).logOut();
+                                checkUserSession();
+                                break;
+
+                        }
+
+                        // Desmarcar item presionado
+                        menuItem.setChecked(false);
+                        // Cerrar drawer
+                        drawerLayout.closeDrawers();
+                        return true;
+                    }
+                }
+        );
     }
 
 }

@@ -3,29 +3,15 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_ordenes"
+            android:id="@+id/nav_empresas"
             android:checked="true"
-            android:icon="@drawable/ic_encargos"
-            android:title="Mis órdenes" />
-        <item
-            android:id="@+id/nav_direcciones"
             android:icon="@drawable/ic_direcciones"
-            android:title="Mis direcciones" />
-
-        <!--
+            android:title="Mis locales" />
         <item
-            android:id="@+id/nav_perfil"
-            android:icon="@drawable/ic_miperfil"
-            android:title="Mi perfil" />
-        -->
+            android:id="@+id/nav_ayuda"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="Solicitar soporte" />
 
-
-        <!--
-        <item
-            android:id="@+id/nav_acerca"
-            android:icon="@drawable/ic_acerca"
-            android:title="Acerca de nosotros" />
-            -->
 
         <!-- Sección de configuración -->
         <item
@@ -35,11 +21,12 @@
                 <item
                     android:id="@+id/nav_sugerirempresa"
                     android:icon="@drawable/ic_registrarempresa"
-                    android:title="Sugerir local" />
+                    android:title="Sugerencias" />
+
                 <item
-                    android:id="@+id/nav_compartir"
-                    android:icon="@drawable/ic_compartir"
-                    android:title="Compartir APP" />
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_logout"
+                    android:title="Cerrar Sesión" />
             </menu>
         </item>
     </group>

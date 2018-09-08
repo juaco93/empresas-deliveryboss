@@ -47,6 +47,9 @@ public class SessionPrefs {
     public static final String PREF_USUARIO_TOKEN = "PREF_USUARIO_TOKEN";
     public static final String PREF_USUARIO_ROLES = "PREF_USUARIO_ROLES";
 
+    // VARIABLES ESTATICAS PARA ROLES - GUARDAN EL IDEMPRESA DEL ROL ESPECIFICADO EN SU NOMBRE //
+    public static final String PREF_USUARIO_ROLES_ADMIN = "PREF_USUARIO_ROLES_ADMIN";
+    public static final String PREF_USUARIO_ROLES_REPARTIDOR = "PREF_USUARIO_ROLES_REPARTIDOR";
 
 
     private static SessionPrefs INSTANCE;
@@ -82,10 +85,12 @@ public class SessionPrefs {
             editor.putString(PREF_USUARIO_IMAGEN, usuario.getImagen());
             editor.putString(PREF_USUARIO_TOKEN, usuario.getToken());
 
+
+
             String rolesConcat = "";
             if(usuario.getRoles()!=null){
                 for(int i=0; i<usuario.getRoles().size();i++){
-                    rolesConcat+= usuario.getRoles().get(i).getRol_tipo();
+                    rolesConcat+= usuario.getRoles().get(i).getRol_tipo()+"-"+usuario.getRoles().get(i).getIdempresa();
                     if(i<usuario.getRoles().size()-1){
                         rolesConcat+=", ";
                     }
@@ -163,6 +168,14 @@ public class SessionPrefs {
 
     public String getPrefUsuarioToken(){
         return mPrefs.getString(PREF_USUARIO_TOKEN, null);
+    }
+
+    public String getPrefUsuarioRoles(){
+        return mPrefs.getString(PREF_USUARIO_ROLES, null);
+    }
+
+    public String getPrefUsuarioNombreyApellido(){
+        return mPrefs.getString(PREF_USUARIO_NOMBRE, null)+" "+mPrefs.getString(PREF_USUARIO_APELLIDO, null);
     }
     /*
     public String getPrefUsuarioEmpresaIdempresa(){

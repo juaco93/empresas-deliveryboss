@@ -1,31 +1,27 @@
 {
   "project_info": {
-    "project_number": "731162469170",
-    "firebase_url": "https://deliveryboss-reparto.firebaseio.com",
-    "project_id": "deliveryboss-reparto",
-    "storage_bucket": "deliveryboss-reparto.appspot.com"
+    "project_number": "833368224262",
+    "firebase_url": "https://deliveryboss-empresas.firebaseio.com",
+    "project_id": "deliveryboss-empresas",
+    "storage_bucket": "deliveryboss-empresas.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:731162469170:android:5e8ec17d9c59e916",
+        "mobilesdk_app_id": "1:833368224262:android:930f435c8740b529",
         "android_client_info": {
-          "package_name": "deliveryboss.com.reparto"
+          "package_name": "deliveryboss.com.empresas"
         }
       },
       "oauth_client": [
         {
-          "client_id": "731162469170-fpf8ieaiffk9hfno7trffd79hlme91ho.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "731162469170-fpf8ieaiffk9hfno7trffd79hlme91ho.apps.googleusercontent.com",
+          "client_id": "833368224262-u8fk6oocln1ba2flofm2fgnhm57tv5as.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBTpahDyoAi7SmEcPSaoyxkEql1vnQixtM"
+          "current_key": "AIzaSyA0DzDqUpoNXGoZHJJ5LJ8axPKUaSnKupM"
         }
       ],
       "services": {

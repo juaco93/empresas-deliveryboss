@@ -29,6 +29,7 @@ import deliveryboss.com.empresas.data.adapter.OrdenesAdapter;
 import deliveryboss.com.empresas.data.api.DeliverybossApi;
 import deliveryboss.com.empresas.data.model.ApiResponseOrdenes;
 import deliveryboss.com.empresas.data.model.Orden;
+import deliveryboss.com.empresas.data.prefs.SessionPrefs;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -204,17 +205,25 @@ public class OrdenesRechazadas extends Fragment {
 
 
     private void obtenerOrdenes(){
-        //authorization = SessionPrefs.get(getApplicationContext()).getPrefUsuarioToken();
-        //String idusuario = SessionPrefs.get(getApplicationContext()).getPrefUsuarioIdUsuario();
-        //String idempresa = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRepartoEmpresaIdempresa();
-        //String idusuario = "1";
+        String rolesCad = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
+        String[] roles = rolesCad.split(",");
+
+        String idempresaAdministrador ="";
+
+
+        for(int i=0; i<roles.length;i++){
+            String[] tipo_rol = roles[i].split("-");
+            if(tipo_rol[0].equals("Administrador")){
+                idempresaAdministrador=tipo_rol[1];
+            }
+        }
         authorization = "7777";
         String idempresa = "0";
 
         Log.d("juaco93", "Recuperando Ordenes desde el Server");
 
         // Realizar petición HTTP
-        Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesEmpresa(authorization,idempresa);
+        Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesEmpresa(authorization,idempresaAdministrador);
         call.enqueue(new Callback<ApiResponseOrdenes>() {
             @Override
             public void onResponse(Call<ApiResponseOrdenes> call,

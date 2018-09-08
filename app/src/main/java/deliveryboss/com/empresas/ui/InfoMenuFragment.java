@@ -36,7 +36,6 @@ import deliveryboss.com.empresas.R;
 import deliveryboss.com.empresas.data.adapter.OrdenesAdapter;
 import deliveryboss.com.empresas.data.api.DeliverybossApi;
 
-import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -56,7 +55,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 import static android.content.Context.SEARCH_SERVICE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class InfoMenuFragment extends Fragment {
@@ -83,6 +81,8 @@ public class InfoMenuFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+
         context = getActivity().getApplicationContext();
         setHasOptionsMenu(true);
     }
@@ -186,8 +186,12 @@ public class InfoMenuFragment extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 return true;
+                /*
             case R.id.action_logout:
-                SessionPrefs.get(getApplicationContext()).logOut();
+                SessionPrefs.get(getContext()).logOut();
+                checkUserSession();
+                */
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -243,13 +247,26 @@ public class InfoMenuFragment extends Fragment {
         //String idusuario = SessionPrefs.get(getApplicationContext()).getPrefUsuarioIdUsuario();
         //String idempresa = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRepartoEmpresaIdempresa();
         //String idusuario = "1";
+        String rolesCad = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
+        String[] roles = rolesCad.split(",");
+
+        String idempresaAdministrador ="";
+
+
+        for(int i=0; i<roles.length;i++){
+            String[] tipo_rol = roles[i].split("-");
+            if(tipo_rol[0].equals("Administrador")){
+                idempresaAdministrador=tipo_rol[1];
+            }
+        }
+
         authorization = "7777";
         String idempresa = "0";
 
-        Log.d("juaco93", "Recuperando Ordenes desde el Server");
+        Log.d("juaco93", "Roles->"+roles);
 
         // Realizar petición HTTP
-        Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesEmpresa(authorization,idempresa);
+        Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesEmpresa(authorization,idempresaAdministrador);
         call.enqueue(new Callback<ApiResponseOrdenes>() {
             @Override
             public void onResponse(Call<ApiResponseOrdenes> call,
@@ -374,7 +391,14 @@ public class InfoMenuFragment extends Fragment {
     }
 
 
-
+    private void checkUserSession(){
+        Log.d("sessioncheck","isLoggedIn? -->"+SessionPrefs.get(getContext()).isLoggedIn());
+        // Redirección al Login
+        if (!SessionPrefs.get(getContext()).isLoggedIn()) {
+            startActivity(new Intent(getContext(), LoginActivity.class));
+            //finish();
+        }
+    }
 
 
 }

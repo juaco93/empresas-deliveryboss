@@ -21,7 +21,8 @@
         android:inputType="textMultiLine|textShortMessage"
         android:padding="10dp"
         android:textAlignment="viewStart"
-        android:textSize="18sp"></EditText>
+        android:textSize="18sp"
+        android:gravity="start"></EditText>
 
     <Button
         android:id="@+id/btnMensajeEnviar"
@@ -39,6 +40,6 @@
         android:backgroundTint="@color/colorComida"
         android:elevation="10dp"
         android:text="Enviar Mensaje"
-        android:textColor="@color/cardview_light_background"></Button>
+        android:textColor="@android:color/black"></Button>
 
 </RelativeLayout>

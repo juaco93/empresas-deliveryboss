@@ -27,8 +27,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,12 +57,12 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
     private TextInputLayout mFloatLabelEmail;
     private TextInputLayout mFloatLabelPassword;
-    LoginButton loginButton;
-    CallbackManager callbackManager;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private Retrofit mRestAdapter;
     private DeliverybossApi mDeliverybossApi;
+
+    String idempresaAdministrador ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -371,7 +369,19 @@ public class LoginActivity extends AppCompatActivity {
     private void displayFirebaseRegId() {
 
         //final String idEmpresa = SessionPrefs.get(this).getPrefUsuarioEmpresaIdempresa();
-        //Log.d("logindb","idempresa--topic-->"+idEmpresa);
+        //
+
+        String rolesCad = SessionPrefs.get(this).getPrefUsuarioRoles();
+        String[] roles = rolesCad.split(",");
+
+        for(int i=0; i<roles.length;i++){
+            String[] tipo_rol = roles[i].split("-");
+            if(tipo_rol[0].equals("Administrador")){
+                idempresaAdministrador=tipo_rol[1];
+            }
+        }
+        Log.d("regId","idempresa--topic-->"+idempresaAdministrador);
+
         //// PARTE DE MENSAJERIA VIA FCM
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -382,7 +392,6 @@ public class LoginActivity extends AppCompatActivity {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
                     //FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-                    FirebaseMessaging.getInstance().subscribeToTopic("1");
 
                     //displayFirebaseRegId();
 
@@ -399,6 +408,12 @@ public class LoginActivity extends AppCompatActivity {
 
         //displayFirebaseRegId();
 
+        // REGISTRACION EN TOPICS //
+        Log.d("regId","Dispositivo registrado en los topics correspondientes");
+        FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_EMPRESAS);
+        FirebaseMessaging.getInstance().subscribeToTopic(idempresaAdministrador);
+        //
+
         //String idusuario = SessionPrefs.get(this).getPrefUsuarioCiudad();
         //String regId = SessionPrefs.get(LoginActivity.this).getPrefUsuarioRegId();
         SharedPreferences pref1 = getApplicationContext().getSharedPreferences(SessionPrefs.PREFS_NAME, 0);
@@ -407,7 +422,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
 
-        //Log.d("regId", "Firebase reg id: " + regId);
+        Log.d("regId", "Firebase reg id: " + regId);
         //Log.d("regId", "Firebase idusuario: " + idusuario);
 /*
         Call<ApiResponse> call = mDeliverybossApi.registrarRegId(new regIdBody(regId,idusuario));
