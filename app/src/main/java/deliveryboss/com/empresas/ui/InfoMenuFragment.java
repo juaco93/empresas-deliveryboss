@@ -38,14 +38,17 @@ import deliveryboss.com.empresas.data.api.DeliverybossApi;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 import deliveryboss.com.empresas.data.model.ApiResponseOrdenes;
 import deliveryboss.com.empresas.data.model.Orden;
+import deliveryboss.com.empresas.data.model.Roles;
 import deliveryboss.com.empresas.data.prefs.SessionPrefs;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,6 +76,13 @@ public class InfoMenuFragment extends Fragment {
     private boolean isOpen = false;
     private boolean isFirstOpening = true;
 
+    String rolesCad;
+    String[] roles;
+    String idempresaAdministrador;
+    String logoEmpresaAdministrador;
+    List<Roles> rolesUsuario;
+
+
 
     public InfoMenuFragment() {
         // Required empty public constructor
@@ -94,6 +104,7 @@ public class InfoMenuFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_info_menu, container, false);
 
+        obtenerRoles();
 
         mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes);
         mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
@@ -130,6 +141,7 @@ public class InfoMenuFragment extends Fragment {
                 .build();
         // Crear conexión a la API de Deliveryboss
         mDeliverybossApi = mRestAdapter.create(DeliverybossApi.class);
+
 
 
 
@@ -243,27 +255,8 @@ public class InfoMenuFragment extends Fragment {
 
 
     private void obtenerOrdenes(){
-        //authorization = SessionPrefs.get(getApplicationContext()).getPrefUsuarioToken();
-        //String idusuario = SessionPrefs.get(getApplicationContext()).getPrefUsuarioIdUsuario();
-        //String idempresa = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRepartoEmpresaIdempresa();
-        //String idusuario = "1";
-        String rolesCad = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
-        String[] roles = rolesCad.split(",");
-
-        String idempresaAdministrador ="";
-
-
-        for(int i=0; i<roles.length;i++){
-            String[] tipo_rol = roles[i].split("-");
-            if(tipo_rol[0].equals("Administrador")){
-                idempresaAdministrador=tipo_rol[1];
-            }
-        }
-
         authorization = "7777";
-        String idempresa = "0";
-
-        Log.d("juaco93", "Roles->"+roles);
+        Log.d("juaco93", "idEmpresa rol Admin->"+idempresaAdministrador);
 
         // Realizar petición HTTP
         Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesEmpresa(authorization,idempresaAdministrador);
@@ -313,27 +306,6 @@ public class InfoMenuFragment extends Fragment {
                     mostrarOrdenesEmpty();
                     showLoadingIndicator(false);
                 }
-
-                /*
-                if(getContext().getApplicationInfo()!=null){
-                    //Log.d("notinoti","Recibimos notificacion, ingresando a orden");
-                    if(getIntent().getStringExtra("idorden")!=null){
-                        int cant = serverOrdenes.size();
-                        for(int i=0;i<cant;i++){
-                            // Chequeamos el idorden para ver si esta en las listadas, y si está actuamos según el estado de la orden
-                            // Si estado='confirmada' o estado='cancelada' mostramos el estado de la orden
-                            // Si estado='entregada' entonces mostramos el dialogo para calificar la orden
-                            if(serverOrdenes.get(i).getIdorden().equals(getIntent().getStringExtra("idorden"))){
-                                if(getIntent().getStringExtra("estado").equals("entregada")){
-                                    //if(serverOrdenes.get(i).getCalificado()==null)showDialogCalificar((new Gson()).toJson(serverOrdenes.get(i)));
-                                }
-                                if(getIntent().getStringExtra("estado").equals("confirmada")||getIntent().getStringExtra("estado").equals("cancelada")||getIntent().getStringExtra("estado").equals("anulada")||getIntent().getStringExtra("estado").equals("enviada")){
-                                    //showInfoEstadoOrden((new Gson()).toJson(serverOrdenes.get(i)));
-                                }
-                            }
-                        }
-                    }
-                }*/
             }
 
             @Override
@@ -397,6 +369,25 @@ public class InfoMenuFragment extends Fragment {
         if (!SessionPrefs.get(getContext()).isLoggedIn()) {
             startActivity(new Intent(getContext(), LoginActivity.class));
             //finish();
+        }
+    }
+
+    private void obtenerRoles(){
+        String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
+        rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
+        obtenerRoldeAdmin();
+    }
+
+    private void obtenerRoldeAdmin(){
+        if(rolesUsuario!=null){
+            if(rolesUsuario.size()>0){
+                for(int i=0;i<rolesUsuario.size();i++){
+                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
+                        idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
+                        logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
+                    }
+                }
+            }
         }
     }
 

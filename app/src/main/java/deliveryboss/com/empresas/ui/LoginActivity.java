@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
     private DeliverybossApi mDeliverybossApi;
 
     String idempresaAdministrador ="";
+    String logoEmpresaAdministrador;
+    List<Roles> rolesUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,13 +207,11 @@ public class LoginActivity extends AppCompatActivity {
                     // Guardar usuario en preferencias
                     SessionPrefs.get(LoginActivity.this).saveUsuario(response.body().getUsuario());
 
-                    // Guardar el regId para enviar notificaciones en la BD
-                    displayFirebaseRegId();
-
-
-                    if(chequearRoles(response.body().getUsuario())){
+                    if(obtenerRoles()){
                         // Ir a la pantalla principal
                         mostrarPantallaPerfilUsuario();
+                        // Guardar el regId para enviar notificaciones en la BD
+                        displayFirebaseRegId();
                     }else{
                         showLoginError("Tu usuario no es Administrador!");
                     }
@@ -470,14 +471,14 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-
+/*
     public boolean chequearRoles(Usuario_logueado usuario){
         List<Roles> rolesDelUsuarioLogueado = new ArrayList<>();
         int c=0;
         if(usuario.getRoles()!=null){
             for(int i=0; i<usuario.getRoles().size();i++){
                 if(usuario.getRoles().get(i).getRol_tipo().equals("Administrador")){
-                    rolesDelUsuarioLogueado.add(new Roles(String.valueOf(c),usuario.getIdusuario(),usuario.getRoles().get(i).getIdempresa(),"Administrador"));
+                    rolesDelUsuarioLogueado.add(new Roles(String.valueOf(c),usuario.getIdusuario(),usuario.getRoles().get(i).getIdempresa(),"Administrador",usuario.getRoles().get(i).getLogo()));
                 }
             }
         }
@@ -487,6 +488,29 @@ public class LoginActivity extends AppCompatActivity {
                 return true;
             }else return false;
         }else return false;
+    }
+
+    */
+
+    private boolean obtenerRoles(){
+        Boolean esAdmin= false;
+        String rolesJson = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRoles();
+        Log.d("juaco93",rolesJson);
+        rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
+
+        if(rolesUsuario!=null){
+            if(rolesUsuario.size()>0){
+                for(int i=0;i<rolesUsuario.size();i++){
+                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
+                        idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
+                        logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
+                        esAdmin = true;
+                    }else esAdmin = false;
+                }
+            }else esAdmin = false;
+        }else esAdmin = false;
+
+        return esAdmin;
     }
 
 }

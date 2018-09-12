@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,6 +59,7 @@ import deliveryboss.com.empresas.data.model.CircleTransform;
 import deliveryboss.com.empresas.data.model.Empresa_repartidor;
 import deliveryboss.com.empresas.data.model.MessageEvent;
 import deliveryboss.com.empresas.data.model.Orden;
+import deliveryboss.com.empresas.data.model.Roles;
 import deliveryboss.com.empresas.data.prefs.SessionPrefs;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
     TextView userName;
     TextView userEmail;
     View rootView;
+    String idempresaAdministrador;
+    String logoEmpresaAdministrador;
+    List<Roles> rolesUsuario;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private int[] tabIcons = {
@@ -142,13 +147,16 @@ public class MainActivity extends AppCompatActivity {
         userName = (TextView) headerView.findViewById(R.id.userName);
         userEmail = (TextView) headerView.findViewById(R.id.userEmail);
 
+        obtenerRoles();
+
         if (navigationView != null) {
             setupDrawerContent(navigationView);
             // Añadir carácteristicas
 
             String nombre = SessionPrefs.get(this).getPrefUsuarioNombreyApellido();
             String email = SessionPrefs.get(this).getPrefUsuarioEmail();
-            String imagen = SessionPrefs.get(this).getPrefUsuarioImagen();
+            //String imagen = SessionPrefs.get(this).getPrefUsuarioImagen();
+            String imagen = logoEmpresaAdministrador;
 
             if(imagen!=null){
                 if(!imagen.isEmpty()) {
@@ -433,6 +441,26 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void obtenerRoles(){
+        String rolesJson = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRoles();
+        Log.d("juaco93",rolesJson);
+        rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
+        obtenerRoldeAdmin();
+    }
+
+    private void obtenerRoldeAdmin(){
+        if(rolesUsuario!=null){
+            if(rolesUsuario.size()>0){
+                for(int i=0;i<rolesUsuario.size();i++){
+                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
+                        idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
+                        logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
+                    }
+                }
+            }
+        }
     }
 
 }

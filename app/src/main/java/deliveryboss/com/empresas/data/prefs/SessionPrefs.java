@@ -4,8 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import deliveryboss.com.empresas.data.model.Empresa_repartidor;
 import deliveryboss.com.empresas.data.model.Empresa_usuario;
+import deliveryboss.com.empresas.data.model.Roles;
 import deliveryboss.com.empresas.data.model.Usuario;
 import deliveryboss.com.empresas.data.model.Usuario_logueado;
 import deliveryboss.com.empresas.data.model.Usuario_reparto;
@@ -85,19 +91,22 @@ public class SessionPrefs {
             editor.putString(PREF_USUARIO_IMAGEN, usuario.getImagen());
             editor.putString(PREF_USUARIO_TOKEN, usuario.getToken());
 
+            String rolesJson = null;
+            if(usuario.getRoles()!=null)
+                rolesJson = new Gson().toJson(usuario.getRoles());
 
-
+            /*
             String rolesConcat = "";
             if(usuario.getRoles()!=null){
                 for(int i=0; i<usuario.getRoles().size();i++){
-                    rolesConcat+= usuario.getRoles().get(i).getRol_tipo()+"-"+usuario.getRoles().get(i).getIdempresa();
+                    rolesConcat+= usuario.getRoles().get(i).getRol_tipo()+"-"+usuario.getRoles().get(i).getIdempresa()+"-"+usuario.getRoles().get(i).getLogo();
                     if(i<usuario.getRoles().size()-1){
                         rolesConcat+=", ";
                     }
                 }
-            }
+            }*/
 
-            editor.putString(PREF_USUARIO_ROLES,rolesConcat);
+            editor.putString(PREF_USUARIO_ROLES,rolesJson);
             editor.apply();
 
             mIsLoggedIn = true;

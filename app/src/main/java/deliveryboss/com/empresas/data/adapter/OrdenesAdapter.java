@@ -115,8 +115,8 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
 
         //METODO PARA MARCAR COMO ENTREGADA (Solo cuando esta en transito, sino deshabilitado)
         if(orden.getEstado().equals("En tránsito")) {
-            holder.marcarComoEntregada.setTextColor(Color.BLACK);
-            holder.marcarComoEntregada.setOnClickListener(new View.OnClickListener() {
+            holder.cambiarEstado.setTextColor(Color.BLACK);
+            holder.cambiarEstado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -136,8 +136,14 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
                     dialog.show();
                 }
             });
-        }else{
-            holder.marcarComoEntregada.setTextColor(Color.GRAY);
+        }
+        if(orden.getEstado().equals("Pendiente")) {
+
+            }
+
+
+            else{
+            holder.cambiarEstado.setTextColor(Color.GRAY);
         }
 
         //METODO PARA ENVIAR MENSAJE
@@ -227,7 +233,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         public TextView pagaCon;
         public TextView verMapa;
         public TextView enviarMensaje;
-        public TextView marcarComoEntregada;
+        public TextView cambiarEstado;
 
 
         public ViewHolder(View itemView) {
@@ -245,7 +251,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             pagaCon = (TextView) itemView.findViewById(R.id.txtOrdenDetallePagaCon);
             verMapa = (TextView) itemView.findViewById(R.id.txtOrdenVerMapa);
             enviarMensaje = (TextView) itemView.findViewById(R.id.txtOrdenLlamar);
-            marcarComoEntregada = (TextView) itemView.findViewById(R.id.txtOrdenMarcarComoEntregada);
+            cambiarEstado = (TextView) itemView.findViewById(R.id.txtOrdenCambiarEstado);
 
             itemView.setOnClickListener(this);
         }
