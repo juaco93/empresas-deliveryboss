@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHolder> {
     private Context context;
+    final static String[] Estados = new String[] { "Confirmar", "Cancelar","Entregar" };
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -72,6 +75,13 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         holder.direccion.setText(orden.getCalle() + " " +orden.getNumero() + " " + orden.getHabitacion() + " - Bº" + orden.getBarrio());
         holder.monto.setText("Total: $"+ orden.getImporte_total());
         holder.pagaCon.setText("Paga con: $"+orden.getPaga_con());
+
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+                android.R.layout.simple_spinner_item, Estados);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        holder.cambiarEstado.setAdapter(adapter);
 
         if(orden.getEstado().equals("Confirmada")||orden.getEstado().equals("Terminada")||orden.getEstado().equals("Enviada"))holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenConfirmada));
         if(orden.getEstado().equals("Pendiente"))holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenPendiente));
@@ -114,6 +124,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         }
 
         //METODO PARA MARCAR COMO ENTREGADA (Solo cuando esta en transito, sino deshabilitado)
+        /*
         if(orden.getEstado().equals("En tránsito")) {
             holder.cambiarEstado.setTextColor(Color.BLACK);
             holder.cambiarEstado.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +155,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
 
             else{
             holder.cambiarEstado.setTextColor(Color.GRAY);
-        }
+        }*/
 
         //METODO PARA ENVIAR MENSAJE
         holder.verMapa.setTextColor(Color.BLACK);
@@ -233,7 +244,9 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         public TextView pagaCon;
         public TextView verMapa;
         public TextView enviarMensaje;
-        public TextView cambiarEstado;
+        //public TextView cambiarEstado;
+        public Spinner cambiarEstado;
+
 
 
         public ViewHolder(View itemView) {
@@ -251,7 +264,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             pagaCon = (TextView) itemView.findViewById(R.id.txtOrdenDetallePagaCon);
             verMapa = (TextView) itemView.findViewById(R.id.txtOrdenVerMapa);
             enviarMensaje = (TextView) itemView.findViewById(R.id.txtOrdenLlamar);
-            cambiarEstado = (TextView) itemView.findViewById(R.id.txtOrdenCambiarEstado);
+            cambiarEstado = (Spinner) itemView.findViewById(R.id.txtOrdenCambiarEstado);
 
             itemView.setOnClickListener(this);
         }
