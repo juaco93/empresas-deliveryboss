@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (id) {
                             case R.id.nav_empresas:
                                 // launch new intent instead of loading fragment
-                                //startActivity(new Intent(MainActivity.this, MisOrdenesActivity.class));
+                                startActivity(new Intent(MainActivity.this, SeleccionarEmpresa.class));
                                 break;
                             case R.id.nav_ayuda:
                                 //startActivity(new Intent(PrincipalActivity.this, MisDireccionesActivity.class));

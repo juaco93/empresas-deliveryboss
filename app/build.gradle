@@ -57,7 +57,3 @@ dependencies {
     compile 'com.github.toanvc:floatingactionmenu:0.8.9'
 }
 apply plugin: 'com.google.gms.google-services'
-
-
-
-

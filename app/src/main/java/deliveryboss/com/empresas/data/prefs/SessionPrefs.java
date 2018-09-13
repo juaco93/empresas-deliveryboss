@@ -52,6 +52,7 @@ public class SessionPrefs {
     public static final String PREF_USUARIO_IMAGEN = "PREF_USUARIO_IMAGEN";
     public static final String PREF_USUARIO_TOKEN = "PREF_USUARIO_TOKEN";
     public static final String PREF_USUARIO_ROLES = "PREF_USUARIO_ROLES";
+    public static final String PREF_USUARIO_EMPRESA_DEFECTO = "PREF_USUARIO_EMPRESA_DEFECTO";
 
     // VARIABLES ESTATICAS PARA ROLES - GUARDAN EL IDEMPRESA DEL ROL ESPECIFICADO EN SU NOMBRE //
     public static final String PREF_USUARIO_ROLES_ADMIN = "PREF_USUARIO_ROLES_ADMIN";
@@ -138,6 +139,15 @@ public class SessionPrefs {
         }
     }
 
+    public void saveEmpresaPorDefecto(Roles rol) {
+        if (rol != null) {
+            String rolPorDefectoJson = new Gson().toJson(rol);
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putString(PREF_USUARIO_EMPRESA_DEFECTO, rolPorDefectoJson);
+            editor.apply();
+        }
+    }
+
     public void saveCiudad(String idciudad, String ciudad){
         if(idciudad!=null){
             SharedPreferences.Editor editor = mPrefs.edit();
@@ -181,6 +191,10 @@ public class SessionPrefs {
 
     public String getPrefUsuarioRoles(){
         return mPrefs.getString(PREF_USUARIO_ROLES, null);
+    }
+
+    public String getPrefUsuarioEmpresaPorDefecto(){
+        return mPrefs.getString(PREF_USUARIO_EMPRESA_DEFECTO, null);
     }
 
     public String getPrefUsuarioNombreyApellido(){
