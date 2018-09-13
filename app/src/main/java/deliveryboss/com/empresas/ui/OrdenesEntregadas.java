@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import deliveryboss.com.empresas.data.adapter.OrdenesAdapter;
 import deliveryboss.com.empresas.data.api.DeliverybossApi;
 import deliveryboss.com.empresas.data.model.ApiResponseOrdenes;
 import deliveryboss.com.empresas.data.model.Orden;
+import deliveryboss.com.empresas.data.model.Roles;
 import deliveryboss.com.empresas.data.prefs.SessionPrefs;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +56,10 @@ public class OrdenesEntregadas extends Fragment {
     private boolean isOpen = false;
     private boolean isFirstOpening = true;
 
+    String idempresaAdministrador;
+    String logoEmpresaAdministrador;
+    List<Roles> rolesUsuario;
+
 
     public OrdenesEntregadas() {
         // Required empty public constructor
@@ -73,6 +79,7 @@ public class OrdenesEntregadas extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_ordenes_entregadas, container, false);
 
+        obtenerRoles();
 
         mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes_entregadas);
         mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
@@ -205,20 +212,7 @@ public class OrdenesEntregadas extends Fragment {
 
 
     private void obtenerOrdenes(){
-        String rolesCad = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
-        String[] roles = rolesCad.split(",");
-
-        String idempresaAdministrador ="";
-
-
-        for(int i=0; i<roles.length;i++){
-            String[] tipo_rol = roles[i].split("-");
-            if(tipo_rol[0].equals("Administrador")){
-                idempresaAdministrador=tipo_rol[1];
-            }
-        }
         authorization = "7777";
-        String idempresa = "0";
 
         Log.d("juaco93", "Recuperando Ordenes desde el Server");
 
@@ -346,5 +340,24 @@ public class OrdenesEntregadas extends Fragment {
         //if(cant<=0)mostrarOrdenesEmpty();
     }
 
+
+    private void obtenerRoles(){
+        String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
+        rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
+        obtenerRoldeAdmin();
+    }
+
+    private void obtenerRoldeAdmin(){
+        if(rolesUsuario!=null){
+            if(rolesUsuario.size()>0){
+                for(int i=0;i<rolesUsuario.size();i++){
+                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
+                        idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
+                        logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
+                    }
+                }
+            }
+        }
+    }
 
 }
