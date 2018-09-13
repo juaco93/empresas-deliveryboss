@@ -21,6 +21,13 @@
         <item>Retiro en el local</item>
     </string-array>
 
+    <string-array name="estados_orden">
+        <item>Cancelar</item>
+        <item>Confirmar</item>
+        <item>Asignar a delivery</item>
+        <item>Entregar</item>
+    </string-array>
+
     <string-array name="tipo_sugerencia">
         <item>Soy Cliente</item>
         <item>Soy de la Empresa</item>

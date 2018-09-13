@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -54,7 +55,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHolder> {
     private Context context;
-    final static String[] Estados = new String[] { "Confirmar", "Cancelar","Entregar" };
+    final static String[] Estados0 = new String[] { "" };
+    final static String[] Estados1 = new String[] { "Acciones","Confirmar", "Cancelar" };
+    final static String[] Estados2 = new String[] { "Acciones","Asignar a delivery"};
+    final static String[] Estados3 = new String[] { "Acciones","Entregar" };
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,6 +70,9 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        final String estado="";
+        final String fechaHora="";
+
         final Orden orden = mItems.get(position);
         holder.idorden.setText("Orden #" + orden.getIdorden());
         holder.nombreEmpresa.setText(orden.getNombre_empresa());
@@ -77,17 +84,67 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         holder.pagaCon.setText("Paga con: $"+orden.getPaga_con());
 
 
+        if(orden.getEstado().equals("Confirmada")||orden.getEstado().equals("Terminada")||orden.getEstado().equals("Enviada"))
+        {
+            holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenConfirmada));
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                    android.R.layout.simple_spinner_item, Estados2);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setAdapter(adapter);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item, Estados);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        holder.cambiarEstado.setAdapter(adapter);
+        }
+        if(orden.getEstado().equals("Pendiente"))
+        {
+            holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenPendiente));
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                    android.R.layout.simple_spinner_item, Estados1);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setAdapter(adapter);
+        }
+        if(orden.getEstado().equals("En tránsito"))
+        {
+            holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenPendiente));
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                    android.R.layout.simple_spinner_item, Estados3);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setAdapter(adapter);
+        }
+        if(orden.getEstado().equals("Cancelada")||orden.getEstado().equals("Anulada"))
+        {
+            holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenCancelada));
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                    android.R.layout.simple_spinner_item, Estados0);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setAdapter(adapter);
+        }
+        if(orden.getEstado().equals("Entregada"))
+        {
+            holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenEntregada));
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                    android.R.layout.simple_spinner_item, Estados0);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setAdapter(adapter);
+        }
 
-        if(orden.getEstado().equals("Confirmada")||orden.getEstado().equals("Terminada")||orden.getEstado().equals("Enviada"))holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenConfirmada));
-        if(orden.getEstado().equals("Pendiente"))holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenPendiente));
-        if(orden.getEstado().equals("Cancelada")||orden.getEstado().equals("Anulada"))holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenCancelada));
-        if(orden.getEstado().equals("Entregada"))holder.estado.setBackgroundColor(ContextCompat.getColor(context, R.color.colorOrdenEntregada));
-        //holder.info_estado.setText(orden.getInfo_estado());
+        holder.cambiarEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(holder.cambiarEstado.getSelectedItem()!=null){
+                    if(holder.cambiarEstado.getSelectedItem().toString().equals("Cancelar"))
+                        cambiarEstadoOrden(orden,"2");
+                    if(holder.cambiarEstado.getSelectedItem().toString().equals("Confirmar"))
+                        cambiarEstadoOrden(orden,"3");
+                    if(holder.cambiarEstado.getSelectedItem().toString().equals("Asignar a delivery"))
+                        cambiarEstadoOrden(orden,"6");
+                    if(holder.cambiarEstado.getSelectedItem().toString().equals("Entregar"))
+                        cambiarEstadoOrden(orden,"7");
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         int i = 0;
         String previo = "";
@@ -198,7 +255,6 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         newFragment.setArguments(args);
 
         newFragment.show(fragmentManager.beginTransaction(), "Enviar mensaje");
-
     }
 
 
@@ -361,6 +417,92 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 //showLoadingIndicator(false);
                 Log.d("entregada", "Petición rechazada:" + t.getMessage());
+                showErrorMessage("Comprueba tu conexión a Internet");
+            }
+        });
+    }
+
+    private void cambiarEstadoOrden(Orden orden, String idEstado){
+        Retrofit mRestAdapter;
+        DeliverybossApi mDeliverybossApi;
+
+        // Inicializar GSON
+        Gson gson =
+                new GsonBuilder()
+                        .create();
+
+        // Crear conexión al servicio REST
+        mRestAdapter = new Retrofit.Builder()
+                .baseUrl(DeliverybossApi.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        // Crear conexión a la API de Deliveryboss
+        mDeliverybossApi = mRestAdapter.create(DeliverybossApi.class);
+
+        Log.d("juaco93","Modificando el estado de la Orden");
+
+        String authorization = SessionPrefs.get(context).getPrefUsuarioToken();
+        String idorden = orden.getIdorden();
+
+        List<Orden_detalle> vacia = null;
+        //vacia.add(new Orden_detalle("","","","","","","",""));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String fechaHora = sdf.format(new Date());
+
+        //Orden ordenMod = new Orden(idorden,"","","","","","","","","","","","","1","","","","",recibida,fechaHora,"","","","","","",vacia);
+        Orden ordenMod = orden;
+
+        ordenMod.setOrden_estado_idorden_estado(idEstado);
+        ordenMod.setFecha_hora_estado(fechaHora);
+
+        if(idEstado.equals("7")){
+            ordenMod.setRecibida("1");
+            ordenMod.setRecibida_fecha_hora(fechaHora);
+        }else{
+            ordenMod.setRecibida("0");
+        }
+
+        Log.d("juaco93",(new Gson()).toJson(ordenMod));
+        showErrorMessage("Se cambió el estado de la Orden!");
+
+        // Realizar petición HTTP
+        Call<ApiResponse> call2 = mDeliverybossApi.modificarOrden(authorization,idorden,ordenMod);
+        call2.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call,
+                                   Response<ApiResponse> response) {
+                if (!response.isSuccessful()) {
+                    // Procesar error de API
+                    //String error = "Ha ocurrido un error. Contacte al administrador";
+                    String error = "Ocurrió un error. Contactanos a info@deliveryboss.com.ar";
+                    if (response.errorBody()
+                            .contentType()
+                            .subtype()
+                            .equals("json")) {
+                        try {
+                            Log.d("juaco93", response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            // Reportar causas de error no relacionado con la API
+                            Log.d("juaco93", response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return;
+                }
+                Log.d("juaco93", "Respuesta del SV:" + response.body().getMensaje());
+                //  showErrorMessage(response.body().getMensaje());
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                //showLoadingIndicator(false);
+                Log.d("juaco93", "Petición rechazada:" + t.getMessage());
                 showErrorMessage("Comprueba tu conexión a Internet");
             }
         });

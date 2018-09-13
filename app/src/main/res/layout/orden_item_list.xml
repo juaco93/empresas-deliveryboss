@@ -232,10 +232,10 @@
                 android:layout_centerHorizontal="true"
                 android:layout_toRightOf="@+id/txtOrdenVerMapa"
                 android:layout_weight="1"
-                android:text="ENTREGAR"
                 android:textAppearance="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:textColorLink="@android:color/black"
                 android:textSize="11sp"
+                android:entries="@array/estados_orden"
                 android:textStyle="bold" />
         </LinearLayout>
 

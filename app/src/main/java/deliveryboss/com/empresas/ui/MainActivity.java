@@ -445,7 +445,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void obtenerRoles(){
         String rolesJson = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRoles();
-        Log.d("juaco93",rolesJson);
+        //Log.d("juaco93",rolesJson);
         rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
         obtenerRoldeAdmin();
     }

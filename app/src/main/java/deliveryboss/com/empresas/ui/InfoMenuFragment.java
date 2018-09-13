@@ -353,7 +353,7 @@ public class InfoMenuFragment extends Fragment {
 
         for (int i = 0; i < serverOrdenes.size(); i++) {
             // Si la orden esta en estado "Enviada" o sea, en camino
-            if (serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("1") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("5") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("6")) {
+            if (serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("1")|| serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("3") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("5") || serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("6")) {
                 filteredList.add(serverOrdenes.get(i));
                 cant++;
             }
