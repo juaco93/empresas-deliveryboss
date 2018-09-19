@@ -207,7 +207,10 @@ public class LoginActivity extends AppCompatActivity {
                     // Guardar usuario en preferencias
                     SessionPrefs.get(LoginActivity.this).saveUsuario(response.body().getUsuario());
 
-                    if(obtenerRoles()){
+                    obtenerRoles();
+
+
+                    if(SessionPrefs.get(LoginActivity.this).getPrefUsuarioEmpresaPorDefecto()!=null){
                         // Ir a la pantalla principal
                         mostrarPantallaPerfilUsuario();
                         // Guardar el regId para enviar notificaciones en la BD
@@ -492,7 +495,7 @@ public class LoginActivity extends AppCompatActivity {
 
     */
 
-    private boolean obtenerRoles(){
+    private void obtenerRoles(){
         Boolean esAdmin= false;
         String rolesJson = SessionPrefs.get(getApplicationContext()).getPrefUsuarioRoles();
         Log.d("juaco93",rolesJson);
@@ -502,15 +505,13 @@ public class LoginActivity extends AppCompatActivity {
             if(rolesUsuario.size()>0){
                 for(int i=0;i<rolesUsuario.size();i++){
                     if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
+                        SessionPrefs.get(getApplicationContext()).saveEmpresaPorDefecto(rolesUsuario.get(i));
                         idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
                         logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
-                        esAdmin = true;
-                    }else esAdmin = false;
+                    }
                 }
-            }else esAdmin = false;
-        }else esAdmin = false;
-
-        return esAdmin;
+            }
+        }
     }
 
 }

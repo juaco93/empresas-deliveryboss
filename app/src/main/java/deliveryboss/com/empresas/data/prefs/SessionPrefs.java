@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import deliveryboss.com.empresas.data.model.Empresa_repartidor;
@@ -94,7 +97,7 @@ public class SessionPrefs {
 
             String rolesJson = null;
             if(usuario.getRoles()!=null)
-                rolesJson = new Gson().toJson(usuario.getRoles());
+                rolesJson = new Gson().toJson(usuario.getRoles(),new TypeToken<List<Roles>>(){}.getType());
 
             /*
             String rolesConcat = "";

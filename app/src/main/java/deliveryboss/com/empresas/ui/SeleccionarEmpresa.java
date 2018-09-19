@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -186,11 +187,10 @@ public class SeleccionarEmpresa extends AppCompatActivity {
     */
 
     private void mostrarEmpresas(List<Roles> roles) {
-        //Log.d("direcciones", "Entramos a mostrar direcciones ");
+        Log.d("juacoRoles", "Cantidad de roles en spinner-->"+roles.size());
 
         // String[] items = new String[direccionesServer.size()];
         String[] items = new String[roles.size()+1];
-
 
         int c=1;
         items[0] = "Seleccioná tu empresa";
@@ -198,7 +198,7 @@ public class SeleccionarEmpresa extends AppCompatActivity {
         for(int i=0; i<roles.size(); i++){
             //Storing names to string array
 
-            items[c] = roles.get(i).getIdempresa() + "->" + roles.get(i).getRol_tipo();
+            items[c] = roles.get(i).getNombre_empresa() + "->" + roles.get(i).getRol_tipo();
             c++;
 
             //items[i] = direccionesServer.get(i).getCalle() + " " + direccionesServer.get(i).getNumero();
@@ -239,6 +239,7 @@ public class SeleccionarEmpresa extends AppCompatActivity {
         }
     }
 
+    /*
     private static final int INTERVALO = 2000; //2 segundos para salir
     private long tiempoPrimerClick;
     @Override
@@ -250,23 +251,26 @@ public class SeleccionarEmpresa extends AppCompatActivity {
         }
         tiempoPrimerClick = System.currentTimeMillis();
     }
+    */
 
 
     private void obtenerRoles(){
         String rolesJson = SessionPrefs.get(this).getPrefUsuarioRoles();
+        Log.d("juacoRoles","Roles guardados en prefs->"+rolesJson);
         rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
         obtenerRoldeAdmin();
     }
 
     private void obtenerRoldeAdmin(){
+        rolesUsuarioAdmin = new ArrayList<>();
         if(rolesUsuario!=null){
             if(rolesUsuario.size()>0){
                 for(int i=0;i<rolesUsuario.size();i++){
                     if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
                         idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
                         logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
-                        rolesUsuarioAdmin = new ArrayList<>();
                         rolesUsuarioAdmin.add(rolesUsuario.get(i));
+                        SessionPrefs.get(this).saveEmpresaPorDefecto(rolesUsuario.get(i));
                     }
                 }
 
@@ -276,7 +280,6 @@ public class SeleccionarEmpresa extends AppCompatActivity {
                     }else{
                         mostrarEmpresasEmpty();
                     }
-
                 }
             }
         }

@@ -79,8 +79,6 @@ public class OrdenesEntregadas extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_ordenes_entregadas, container, false);
 
-        obtenerRoles();
-
         mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes_entregadas);
         mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
         mListaOrdenes.setAdapter(mOrdenesAdapter);
@@ -216,6 +214,10 @@ public class OrdenesEntregadas extends Fragment {
 
         Log.d("juaco93", "Recuperando Ordenes desde el Server");
 
+        String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioEmpresaPorDefecto();
+        Roles rolDefecto = new Gson().fromJson(rolesJson,Roles.class);
+        idempresaAdministrador = rolDefecto.getIdempresa();
+
         // Realizar petición HTTP
         Call<ApiResponseOrdenes> call = mDeliverybossApi.obtenerOrdenesEmpresa(authorization,idempresaAdministrador);
         call.enqueue(new Callback<ApiResponseOrdenes>() {
@@ -338,26 +340,6 @@ public class OrdenesEntregadas extends Fragment {
         }
         mOrdenesAdapter.swapItems(filteredList);
         //if(cant<=0)mostrarOrdenesEmpty();
-    }
-
-
-    private void obtenerRoles(){
-        String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
-        rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
-        obtenerRoldeAdmin();
-    }
-
-    private void obtenerRoldeAdmin(){
-        if(rolesUsuario!=null){
-            if(rolesUsuario.size()>0){
-                for(int i=0;i<rolesUsuario.size();i++){
-                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
-                        idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
-                        logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
-                    }
-                }
-            }
-        }
     }
 
 }

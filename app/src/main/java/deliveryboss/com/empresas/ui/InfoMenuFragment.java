@@ -104,7 +104,7 @@ public class InfoMenuFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_info_menu, container, false);
 
-        obtenerRoles();
+        //obtenerRoles();
 
         mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes);
         mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
@@ -256,6 +256,11 @@ public class InfoMenuFragment extends Fragment {
 
     private void obtenerOrdenes(){
         authorization = "7777";
+
+        String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioEmpresaPorDefecto();
+        Roles rolDefecto = new Gson().fromJson(rolesJson,Roles.class);
+        idempresaAdministrador = rolDefecto.getIdempresa();
+
         Log.d("juaco93", "idEmpresa rol Admin->"+idempresaAdministrador);
 
         // Realizar petición HTTP
@@ -372,6 +377,7 @@ public class InfoMenuFragment extends Fragment {
         }
     }
 
+    /*
     private void obtenerRoles(){
         String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
         rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
@@ -390,6 +396,7 @@ public class InfoMenuFragment extends Fragment {
             }
         }
     }
+    */
 
 
 }

@@ -6,14 +6,15 @@ public class Roles {
     String idempresa;
     String rol_tipo;
     String logo;
+    String nombre_empresa;
 
-
-    public Roles(String idrol, String idusuario, String idempresa, String rol_tipo, String logo) {
+    public Roles(String idrol, String idusuario, String idempresa, String rol_tipo, String logo, String nombre_empresa) {
         this.idrol = idrol;
         this.idusuario = idusuario;
         this.idempresa = idempresa;
         this.rol_tipo = rol_tipo;
         this.logo = logo;
+        this.nombre_empresa = nombre_empresa;
     }
 
     public String getIdrol() {
@@ -54,5 +55,13 @@ public class Roles {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getNombre_empresa() {
+        return nombre_empresa;
+    }
+
+    public void setNombre_empresa(String nombre_empresa) {
+        this.nombre_empresa = nombre_empresa;
     }
 }
