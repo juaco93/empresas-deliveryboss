@@ -1,6 +1,9 @@
 package deliveryboss.com.empresas.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -11,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import deliveryboss.com.empresas.R;
 import deliveryboss.com.empresas.data.api.DeliverybossApi;
+import deliveryboss.com.empresas.data.app.Config;
 import deliveryboss.com.empresas.data.model.ApiResponseDirecciones;
 import deliveryboss.com.empresas.data.model.Roles;
 import deliveryboss.com.empresas.data.model.Usuario_direccion;
@@ -46,6 +51,8 @@ public class SeleccionarEmpresa extends AppCompatActivity {
     List<Roles> rolesUsuario;
     List<Roles> rolesUsuarioAdmin;
 
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+
     String stDireccion;
     String authorization;
     //Button btnAgregarDireccion;
@@ -58,14 +65,6 @@ public class SeleccionarEmpresa extends AppCompatActivity {
         //setSupportActionBar(toolbar);
 
         spDirecciones = (Spinner) findViewById(R.id.spSeleccionarEmpresa);
-        //btnAgregarDireccion = (Button) findViewById(R.id.btnSeleccionarDireccionAgregar);
-        /*btnAgregarDireccion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SeleccionarDireccion.this,MisDireccionesActivity.class);
-                startActivity(intent);
-            }
-        });*/
         btnContinuar = (CardView) findViewById(R.id.btnSeleccionarEmpresaContinuar);
         btnContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,12 +91,13 @@ public class SeleccionarEmpresa extends AppCompatActivity {
 
         obtenerRoles();
 
-        /// SPINNER DE CIUDADES
+        /// SPINNER DE EMPRESAS
         spDirecciones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position>0){
                     rolElegido = rolesUsuarioAdmin.get(position-1);
+                    suscribirseATopic(rolElegido.getIdempresa());
                 }
             }
 
@@ -134,57 +134,6 @@ public class SeleccionarEmpresa extends AppCompatActivity {
 
     }
 
-    /*
-    private void obtenerDirecciones(){
-        authorization = SessionPrefs.get(getApplicationContext()).getPrefUsuarioToken();
-        String idusuario = SessionPrefs.get(getApplicationContext()).getPrefUsuarioIdUsuario();
-        //Log.d("direcciones", "Recuperando Direcciones desde el Server");
-
-        // Realizar petición HTTP
-        Call<ApiResponseDirecciones> call2 = mDeliverybossApi.obtenerDireccionesUsuario(authorization,idusuario);
-        call2.enqueue(new Callback<ApiResponseDirecciones>() {
-            @Override
-            public void onResponse(Call<ApiResponseDirecciones> call,
-                                   Response<ApiResponseDirecciones> response) {
-                if (!response.isSuccessful()) {
-                    // Procesar error de API
-                    String error = "Ha ocurrido un error. Contacte al administrador";
-                    if (response.errorBody()
-                            .contentType()
-                            .subtype()
-                            .equals("json")) {
-
-                        //Log.d("direcciones", response.errorBody().toString());
-                    } else {
-                        //Log.d("direcciones", response.errorBody().toString());
-                    }
-
-                    //Log.d("direcciones", response.message());
-                    //Log.d("direcciones", response.raw().toString());
-                    return;
-                }
-
-                serverDirecciones = response.body().getDatos();
-                //Log.d("direcciones", "todio bien, recibido: " + response.body().getDatos().toString());
-                if (serverDirecciones.size() > 0) {
-                    // Mostrar lista de ordenes
-                    mostrarDirecciones(serverDirecciones);
-                    //Log.d("direcciones","obtuvimos nueva direccion del fragment, pasamos a habilitar el boton");
-                } else {
-                    // Mostrar empty state
-                    mostrarDireccionesEmpty();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponseDirecciones> call, Throwable t) {
-                //showLoadingIndicator(false);
-                //Log.d("direcciones", "Petición rechazada:" + t.getMessage());
-                //showErrorMessage("Error de comunicación");
-            }
-        });
-    }
-    */
 
     private void mostrarEmpresas(List<Roles> roles) {
         Log.d("juacoRoles", "Cantidad de roles en spinner-->"+roles.size());
@@ -239,19 +188,6 @@ public class SeleccionarEmpresa extends AppCompatActivity {
         }
     }
 
-    /*
-    private static final int INTERVALO = 2000; //2 segundos para salir
-    private long tiempoPrimerClick;
-    @Override
-    public void onBackPressed(){
-        if (tiempoPrimerClick + INTERVALO > System.currentTimeMillis()){
-            finishAffinity();
-        }else {
-            Toast.makeText(this, "Presioná atrás de nuevo para salir", Toast.LENGTH_LONG).show();
-        }
-        tiempoPrimerClick = System.currentTimeMillis();
-    }
-    */
 
 
     private void obtenerRoles(){
@@ -283,6 +219,49 @@ public class SeleccionarEmpresa extends AppCompatActivity {
                 }
             }
         }
+    }
+
+
+    private void suscribirseATopic(String idempresa) {
+
+        //// PARTE DE MENSAJERIA VIA FCM
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    //FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+
+                    //displayFirebaseRegId();
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    String message = intent.getStringExtra("message");
+
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+
+                }
+            }
+        };
+
+        //displayFirebaseRegId();
+
+        // REGISTRACION EN TOPICS //
+        Log.d("regId","Dispositivo registrado en los topics correspondientes");
+        FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_EMPRESAS);
+        FirebaseMessaging.getInstance().subscribeToTopic(idempresa);
+
+        SharedPreferences pref1 = getApplicationContext().getSharedPreferences(SessionPrefs.PREFS_NAME, 0);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+
+        Log.d("regId", "Firebase reg id: " + regId);
+
     }
 
 }

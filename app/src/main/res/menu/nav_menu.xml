@@ -8,9 +8,15 @@
             android:icon="@drawable/ic_direcciones"
             android:title="Mis locales" />
         <item
-            android:id="@+id/nav_ayuda"
-            android:icon="@android:drawable/ic_menu_help"
-            android:title="Solicitar soporte" />
+        android:id="@+id/nav_ayuda"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Solicitar soporte" />
+
+        <item
+            android:id="@+id/nav_web"
+            android:checked="true"
+            android:icon="@drawable/ic_web"
+            android:title="Abrir web" />
 
 
         <!-- Sección de configuración -->

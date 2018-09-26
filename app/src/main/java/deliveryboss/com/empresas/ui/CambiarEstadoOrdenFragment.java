@@ -95,6 +95,13 @@ public class CambiarEstadoOrdenFragment extends DialogFragment {
             }
         });
 
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+            }
+        });
+
         // Set the dialog layout
         builder.setView(view);
 
@@ -173,6 +180,7 @@ public class CambiarEstadoOrdenFragment extends DialogFragment {
                     return;
                 }
                 Log.d("juaco93", "Respuesta del SV:" + response.body().getMensaje());
+                getDialog().dismiss();
                 //  showErrorMessage(response.body().getMensaje());
             }
 
@@ -181,6 +189,7 @@ public class CambiarEstadoOrdenFragment extends DialogFragment {
                 //showLoadingIndicator(false);
                 Log.d("juaco93", "Petición rechazada:" + t.getMessage());
                 showErrorMessage("Comprueba tu conexión a Internet");
+                getDialog().dismiss();
             }
         });
     }

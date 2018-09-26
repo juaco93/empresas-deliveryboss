@@ -143,6 +143,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
 
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -268,7 +269,9 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         Bundle args = new Bundle();
         if(!orden.isEmpty() && !orden.equals(""))args.putString("orden", orden);
         if(!valorEstado.isEmpty() && !valorEstado.equals(""))args.putString("valorEstado", valorEstado);
-        if(!opciones.isEmpty() && !opciones.equals(""))args.putString("opciones", opciones);
+        if(opciones!=null){
+            if(!opciones.isEmpty() && !opciones.equals(""))args.putString("opciones", opciones);
+        }
         newFragment.setArguments(args);
 
         newFragment.show(fragmentManager.beginTransaction(), "Cabmiar Estado Orden");

@@ -2,6 +2,7 @@ package deliveryboss.com.empresas.ui;
 
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
+import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -158,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
             String nombre = SessionPrefs.get(this).getPrefUsuarioNombreyApellido();
             String email = SessionPrefs.get(this).getPrefUsuarioEmail();
-            //String imagen = SessionPrefs.get(this).getPrefUsuarioImagen();
-            String imagen = logoEmpresaAdministrador;
+            String imagen = SessionPrefs.get(this).getPrefUsuarioImagen();
+            //String imagen = logoEmpresaAdministrador;
 
             if(imagen!=null){
                 if(!imagen.isEmpty()) {
@@ -426,6 +427,10 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.nav_ayuda:
                                 //startActivity(new Intent(PrincipalActivity.this, MisDireccionesActivity.class));
                                 break;
+                            case R.id.nav_web:
+                                Uri uri = Uri.parse("http://empresas.deliveryboss.com.ar");
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                startActivity(intent);
                             case R.id.nav_sugerirempresa:
                                 //startActivity(new Intent(PrincipalActivity.this, SugerirEmpresa.class));
                                 break;
