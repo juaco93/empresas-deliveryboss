@@ -131,6 +131,7 @@ public class CambiarEstadoOrdenFragment extends DialogFragment {
 
         ordenMod.setOrden_estado_idorden_estado(idEstado);
         ordenMod.setFecha_hora_estado(fechaHora);
+        ordenMod.setInfo_estado(spEstadosPosibles.getSelectedItem().toString());
 
         if(idEstado.equals("7")){
             ordenMod.setRecibida("1");
