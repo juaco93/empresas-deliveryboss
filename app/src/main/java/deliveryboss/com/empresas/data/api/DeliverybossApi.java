@@ -8,6 +8,7 @@ import deliveryboss.com.empresas.data.model.ApiResponse;
 import deliveryboss.com.empresas.data.model.ApiResponseDirecciones;
 import deliveryboss.com.empresas.data.model.ApiResponseLogin;
 import deliveryboss.com.empresas.data.model.ApiResponseOrdenes;
+import deliveryboss.com.empresas.data.model.ApiResponseOrdenesEstadoInformacion;
 import deliveryboss.com.empresas.data.model.Empresa_repartidor;
 import deliveryboss.com.empresas.data.model.Empresa_repartidor_mensaje;
 import deliveryboss.com.empresas.data.model.Empresa_usuario;
@@ -71,6 +72,11 @@ public interface  DeliverybossApi {
     Call<ApiResponse> modificarOrden(@Header("Authorization") String authorization,
                                      @Path(value = "idorden", encoded = true) String idorden,
                                      @Body Orden orden
+    );
+
+
+    @GET("ordenes_estado_informacion/")
+    Call<ApiResponseOrdenesEstadoInformacion> obtenerEstadosOrdenes(@Header("Authorization") String authorization
     );
 
 

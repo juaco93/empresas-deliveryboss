@@ -1,15 +1,13 @@
 package deliveryboss.com.empresas.data.adapter;
 
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,13 +37,14 @@ import java.util.List;
 import deliveryboss.com.empresas.R;
 import deliveryboss.com.empresas.data.api.DeliverybossApi;
 import deliveryboss.com.empresas.data.model.ApiResponse;
+import deliveryboss.com.empresas.data.model.ApiResponseOrdenesEstadoInformacion;
 import deliveryboss.com.empresas.data.model.MessageEvent;
 import deliveryboss.com.empresas.data.model.Orden;
 import deliveryboss.com.empresas.data.model.Orden_detalle;
+import deliveryboss.com.empresas.data.model.Orden_estado_informacion;
 import deliveryboss.com.empresas.data.prefs.SessionPrefs;
+import deliveryboss.com.empresas.ui.CambiarEstadoOrdenFragment;
 import deliveryboss.com.empresas.ui.EnviarMensajeFragment;
-import deliveryboss.com.empresas.ui.MainActivity;
-import deliveryboss.com.empresas.ui.MapsActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,6 +58,8 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
     final static String[] Estados1 = new String[] { "Acciones","Confirmar", "Cancelar" };
     final static String[] Estados2 = new String[] { "Acciones","Asignar a delivery"};
     final static String[] Estados3 = new String[] { "Acciones","Entregar" };
+    String opciones = null;
+    List <Orden_estado_informacion> serverEstados;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -130,14 +131,16 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(holder.cambiarEstado.getSelectedItem()!=null){
+                    String ordenJson = new Gson().toJson(orden);
                     if(holder.cambiarEstado.getSelectedItem().toString().equals("Cancelar"))
-                        cambiarEstadoOrden(orden,"2");
+                        showDialogCambiarEstado(ordenJson,"2",opciones);
                     if(holder.cambiarEstado.getSelectedItem().toString().equals("Confirmar"))
-                        cambiarEstadoOrden(orden,"3");
+                        showDialogCambiarEstado(ordenJson,"3",opciones);
                     if(holder.cambiarEstado.getSelectedItem().toString().equals("Asignar a delivery"))
-                        cambiarEstadoOrden(orden,"6");
+                        showDialogCambiarEstado(ordenJson,"6",opciones);
                     if(holder.cambiarEstado.getSelectedItem().toString().equals("Entregar"))
-                        cambiarEstadoOrden(orden,"7");
+                        showDialogCambiarEstado(ordenJson,"7",opciones);
+
                 }
             }
             @Override
@@ -219,6 +222,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         holder.enviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //showDialog(new Gson().toJson(orden));
                 showDialog(new Gson().toJson(orden));
             }
         });
@@ -255,6 +259,19 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         newFragment.setArguments(args);
 
         newFragment.show(fragmentManager.beginTransaction(), "Enviar mensaje");
+    }
+
+    public void showDialogCambiarEstado(String orden, String valorEstado, String opciones) {
+        android.support.v4.app.FragmentManager fragmentManager = ((FragmentActivity)context).getSupportFragmentManager();
+        CambiarEstadoOrdenFragment newFragment = new CambiarEstadoOrdenFragment();
+
+        Bundle args = new Bundle();
+        if(!orden.isEmpty() && !orden.equals(""))args.putString("orden", orden);
+        if(!valorEstado.isEmpty() && !valorEstado.equals(""))args.putString("valorEstado", valorEstado);
+        if(!opciones.isEmpty() && !opciones.equals(""))args.putString("opciones", opciones);
+        newFragment.setArguments(args);
+
+        newFragment.show(fragmentManager.beginTransaction(), "Cabmiar Estado Orden");
     }
 
 
@@ -322,6 +339,8 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             enviarMensaje = (TextView) itemView.findViewById(R.id.txtOrdenLlamar);
             cambiarEstado = (Spinner) itemView.findViewById(R.id.txtOrdenCambiarEstado);
 
+            obtenerEstadosOrdenes();
+
             itemView.setOnClickListener(this);
         }
 
@@ -343,7 +362,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    private void marcarOrdenComoEntregada(Orden orden){
+    private void obtenerEstadosOrdenes(){
         Retrofit mRestAdapter;
         DeliverybossApi mDeliverybossApi;
 
@@ -360,64 +379,47 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
         // Crear conexión a la API de Deliveryboss
         mDeliverybossApi = mRestAdapter.create(DeliverybossApi.class);
 
-        Log.d("entregada","Modificando el estado de la Orden");
 
         String authorization = SessionPrefs.get(context).getPrefUsuarioToken();
-        String idorden = orden.getIdorden();
 
-        List<Orden_detalle> vacia = null;
-        //vacia.add(new Orden_detalle("","","","","","","",""));
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String fechaHora = sdf.format(new Date());
-        String recibida="1";
-
-        //Orden ordenMod = new Orden(idorden,"","","","","","","","","","","","","1","","","","",recibida,fechaHora,"","","","","","",vacia);
-        Orden ordenMod = orden;
-        ordenMod.setRecibida("1");
-        ordenMod.setRecibida_fecha_hora(fechaHora);
-
-        Log.d("entregada",(new Gson()).toJson(ordenMod));
-        showErrorMessage("Orden entregada");
+        Log.d("juaco93", "Descargados estados de ordenes");
 
         // Realizar petición HTTP
-        Call<ApiResponse> call2 = mDeliverybossApi.modificarOrden(authorization,idorden,ordenMod);
-        call2.enqueue(new Callback<ApiResponse>() {
+        Call<ApiResponseOrdenesEstadoInformacion> call = mDeliverybossApi.obtenerEstadosOrdenes(authorization);
+        call.enqueue(new Callback<ApiResponseOrdenesEstadoInformacion>() {
             @Override
-            public void onResponse(Call<ApiResponse> call,
-                                   Response<ApiResponse> response) {
+            public void onResponse(Call<ApiResponseOrdenesEstadoInformacion> call,
+                                   Response<ApiResponseOrdenesEstadoInformacion> response) {
                 if (!response.isSuccessful()) {
                     // Procesar error de API
-                    //String error = "Ha ocurrido un error. Contacte al administrador";
-                    String error = "Ocurrió un error. Contactanos a info@deliveryboss.com.ar";
+                    String error = "Ha ocurrido un error. Contacte al administrador";
                     if (response.errorBody()
                             .contentType()
                             .subtype()
                             .equals("json")) {
-                        try {
-                            Log.d("entregada", response.errorBody().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     } else {
-                        try {
-                            // Reportar causas de error no relacionado con la API
-                            Log.d("entregada", response.errorBody().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     }
+                    // Mostrar empty state
+                    //mostrarOrdenesEmpty();
                     return;
                 }
-                Log.d("entregada", "Respuesta del SV:" + response.body().getMensaje());
-                //  showErrorMessage(response.body().getMensaje());
+
+                serverEstados = response.body().getDatos();
+                Log.d("gson", "toido bien, recibido: " + response.body().getDatos().toString());
+                if (serverEstados.size() > 0) {
+                    // Mostrar lista de ordenes
+                    //mostrarOrdenes(serverEstados);
+                   opciones = new Gson().toJson(serverEstados);
+                } else {
+                    // Mostrar empty state
+                    //mostrarOrdenesEmpty();
+                }
+
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(Call<ApiResponseOrdenesEstadoInformacion> call, Throwable t) {
                 //showLoadingIndicator(false);
-                Log.d("entregada", "Petición rechazada:" + t.getMessage());
-                showErrorMessage("Comprueba tu conexión a Internet");
             }
         });
     }

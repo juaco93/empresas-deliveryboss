@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Spinner
+        android:id="@+id/spEstadosPosibles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/FondoCamposColor"
+        android:elevation="0dp"
+        android:ems="10"
+        android:inputType="textMultiLine|textShortMessage"
+        android:padding="10dp"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        android:gravity="start"></Spinner>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spEstadosPosibles"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelar"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:layout_below="@+id/spEstadosPosibles"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorComida"
+            android:elevation="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="Cancelar"
+            android:textColor="@android:color/white"></Button>
+
+        <Button
+            android:id="@+id/btnAceptar"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:layout_below="@+id/spEstadosPosibles"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorComida"
+            android:elevation="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="Aceptar"
+            android:textColor="@android:color/white"></Button>
+    </LinearLayout>
+
+</RelativeLayout>

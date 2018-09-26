@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private DeliverybossApi mDeliverybossApi;
     private View mEmptyStateContainer;
     private TextView txtEmptyContainer;
+    private static Context mContext;
 
     private static final int INTERVALO = 2000; //2 segundos para salir
     private long tiempoPrimerClick;
@@ -122,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         //FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_main);
+
+        mContext = MainActivity.this;
 
 
         // Inicio Toolbar
@@ -461,6 +464,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public static Context getmContext(){
+        return mContext;
     }
 
 }

@@ -80,7 +80,7 @@ public class OrdenesRechazadas extends Fragment {
         View v = inflater.inflate(R.layout.fragment_ordenes_rechazadas, container, false);
 
         mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes_rechazadas);
-        mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
+        mOrdenesAdapter = new OrdenesAdapter(MainActivity.getmContext(), new ArrayList<Orden>(0));
         mListaOrdenes.setAdapter(mOrdenesAdapter);
         mOrdenesAdapter.setOnItemClickListener(new OrdenesAdapter.OnItemClickListener() {
             @Override

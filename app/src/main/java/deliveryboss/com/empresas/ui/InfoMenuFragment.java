@@ -47,7 +47,9 @@ import java.util.List;
 
 
 import deliveryboss.com.empresas.data.model.ApiResponseOrdenes;
+import deliveryboss.com.empresas.data.model.ApiResponseOrdenesEstadoInformacion;
 import deliveryboss.com.empresas.data.model.Orden;
+import deliveryboss.com.empresas.data.model.Orden_estado_informacion;
 import deliveryboss.com.empresas.data.model.Roles;
 import deliveryboss.com.empresas.data.prefs.SessionPrefs;
 import retrofit2.Call;
@@ -70,6 +72,7 @@ public class InfoMenuFragment extends Fragment {
     private Retrofit mRestAdapter;
     private DeliverybossApi mDeliverybossApi;
     List<Orden> serverOrdenes;
+    List<Orden_estado_informacion> serverEstados;
     String authorization;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -107,7 +110,7 @@ public class InfoMenuFragment extends Fragment {
         //obtenerRoles();
 
         mListaOrdenes = (RecyclerView) v.findViewById(R.id.list_ordenes);
-        mOrdenesAdapter = new OrdenesAdapter(context, new ArrayList<Orden>(0));
+        mOrdenesAdapter = new OrdenesAdapter(MainActivity.getmContext(), new ArrayList<Orden>(0));
         mListaOrdenes.setAdapter(mOrdenesAdapter);
         mOrdenesAdapter.setOnItemClickListener(new OrdenesAdapter.OnItemClickListener() {
             @Override
@@ -127,8 +130,6 @@ public class InfoMenuFragment extends Fragment {
             }
         });
 
-
-
         // Inicializar GSON
         Gson gson =
                 new GsonBuilder()
@@ -141,9 +142,6 @@ public class InfoMenuFragment extends Fragment {
                 .build();
         // Crear conexión a la API de Deliveryboss
         mDeliverybossApi = mRestAdapter.create(DeliverybossApi.class);
-
-
-
 
         obtenerOrdenes();
 
@@ -377,26 +375,7 @@ public class InfoMenuFragment extends Fragment {
         }
     }
 
-    /*
-    private void obtenerRoles(){
-        String rolesJson = SessionPrefs.get(getContext()).getPrefUsuarioRoles();
-        rolesUsuario = (new Gson().fromJson(rolesJson,  new TypeToken<List<Roles>>(){}.getType()));
-        obtenerRoldeAdmin();
-    }
 
-    private void obtenerRoldeAdmin(){
-        if(rolesUsuario!=null){
-            if(rolesUsuario.size()>0){
-                for(int i=0;i<rolesUsuario.size();i++){
-                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
-                        idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
-                        logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
-                    }
-                }
-            }
-        }
-    }
-    */
 
 
 }
