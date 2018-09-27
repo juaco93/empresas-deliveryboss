@@ -54,7 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHolder> {
     private Context context;
-    final static String[] Estados0 = new String[] { "" };
+    final static String[] Estados0 = new String[] { "Acciones" };
     final static String[] Estados1 = new String[] { "Acciones","Confirmar", "Cancelar" };
     final static String[] Estados2 = new String[] { "Acciones","Asignar a delivery"};
     final static String[] Estados3 = new String[] { "Acciones","Entregar" };
@@ -116,6 +116,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                     android.R.layout.simple_spinner_item, Estados0);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setEnabled(false);
             holder.cambiarEstado.setAdapter(adapter);
         }
         if(orden.getEstado().equals("Entregada"))
@@ -124,6 +125,7 @@ public class OrdenesAdapter extends RecyclerView.Adapter<OrdenesAdapter.ViewHold
             ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                     android.R.layout.simple_spinner_item, Estados0);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.cambiarEstado.setEnabled(false);
             holder.cambiarEstado.setAdapter(adapter);
         }
 

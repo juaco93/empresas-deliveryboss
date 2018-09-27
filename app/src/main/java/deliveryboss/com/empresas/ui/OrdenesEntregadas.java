@@ -333,7 +333,7 @@ public class OrdenesEntregadas extends Fragment {
 
         for (int i = 0; i < serverOrdenes.size(); i++) {
             // Si la orden esta en estado "Enviada" o sea, en camino
-            if (serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("7")) {
+            if (serverOrdenes.get(i).getOrden_estado_idorden_estado().equals("8")) {
                 filteredList.add(serverOrdenes.get(i));
                 cant++;
             }

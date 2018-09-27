@@ -91,7 +91,14 @@ public class CambiarEstadoOrdenFragment extends DialogFragment {
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cambiarEstadoOrden(orden,valorEstado);
+                if(spEstadosPosibles!=null){
+                    if(!spEstadosPosibles.getSelectedItem().toString().equals("Seleccioná una opción")){
+                        cambiarEstadoOrden(orden,valorEstado);
+                    }else{
+                        showErrorMessage("Por favor, seleccioná una opción");
+                    }
+                }
+
             }
         });
 
