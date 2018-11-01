@@ -58,7 +58,10 @@
             android:name=".ui.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".ui.MiPerfilActivity" />
-        <activity android:name=".ui.SeleccionarEmpresa"></activity>
+        <activity
+            android:name=".ui.SeleccionarEmpresa"
+            android:theme="@style/AppTheme.NoActionBar"
+            ></activity>
     </application>
 
 </manifest>

@@ -202,7 +202,7 @@ public class SeleccionarEmpresa extends AppCompatActivity {
         if(rolesUsuario!=null){
             if(rolesUsuario.size()>0){
                 for(int i=0;i<rolesUsuario.size();i++){
-                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")){
+                    if(rolesUsuario.get(i).getRol_tipo().equals("Administrador")|| rolesUsuario.get(i).getRol_tipo().equals("Supervisor")){
                         idempresaAdministrador= rolesUsuario.get(i).getIdempresa();
                         logoEmpresaAdministrador = rolesUsuario.get(i).getLogo();
                         rolesUsuarioAdmin.add(rolesUsuario.get(i));
